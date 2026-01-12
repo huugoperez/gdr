@@ -6,7 +6,7 @@ import pandas as pd
 from pandas import DataFrame
 from pandas import Series
 from matplotlib.axes import Axes
-from helpers.graph_tools import draw_object
+from helpers.graph_tools import draw_object, habille
 
 from helpers.consts_etat_surface import (
     FILE,
@@ -177,15 +177,6 @@ def graphe_state_section(
         color=COLORS
     )
 
-def habille(ax, title, label, scale):
-    """Habillage d'un axe"""
-    ax.tick_params(labelsize=6)
-    ax.set_ylabel(label, fontsize=8)
-    ax.set_ylim(0, scale)
-    ax.grid(visible=True, axis="x", linestyle="--")
-    ax.grid(visible=True, axis="y")
-    ax.set_title(title)
-
 class GraphStates:
     """Classe pour grapher les états de surface IQRN 3D"""
     def __init__(self, df: DataFrame | None = None):
@@ -234,9 +225,9 @@ class GraphStates:
             )
         # Décoration et habillage des graphiques
         title = f"sens {sens}"
-        habille(axes[0], title, STATES[IES], Y_SCALE_W_PR)
-        habille(axes[1], title, STATES[IEP], Y_SCALE)
-        habille(axes[2], title, STATES[IETP], Y_SCALE)
+        habille(axes[0], Y_SCALE_W_PR, title, STATES[IES], grid=True)
+        habille(axes[1], Y_SCALE, title, STATES[IEP], grid=True)
+        habille(axes[2], Y_SCALE, title, STATES[IETP], grid=True)
 
         # Valeurs
         for _, row in df.iterrows():

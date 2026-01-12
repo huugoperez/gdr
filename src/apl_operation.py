@@ -33,37 +33,45 @@ file_names = pick_files(
     **questions
 )
 
-measures: list[dict[str, dict[str, RoadMeasure]]] = []
 
-nb_graphes = 0
-for name in file_names.values():
-    datas = get_po_mo_go_datas(name)
-    if datas is not None:
-        measures.append(datas)
-        nb_graphes += 3
 
-index = 1
-nb_mes_apl = 0
-for j, mes in enumerate(measures):
-    for onde, traces in mes.items():
-        if nb_mes_apl == 0:
-            ax = plt.subplot(nb_graphes, 1, index)
-        else:
-            plt.subplot(nb_graphes, 1, index, sharex=ax)
-        plt.title(str(traces[GAUCHE].title))
+def main():
+    """main exe"""
+    measures: list[dict[str, dict[str, RoadMeasure]]] = []
+    nb_graphes = 0
+    for name in file_names.values():
+        datas = get_po_mo_go_datas(name)
+        if datas is not None:
+            measures.append(datas)
+            nb_graphes += 3
 
-        ABSCISSES = [i * traces[GAUCHE].step for i in range(len(traces[GAUCHE].datas))]
+    index = 1
+    nb_mes_apl = 0
+    for _, mes in enumerate(measures):
+        for onde, traces in mes.items():
+            if nb_mes_apl == 0:
+                ax = plt.subplot(nb_graphes, 1, index)
+            else:
+                plt.subplot(nb_graphes, 1, index, sharex=ax)
+            plt.title(str(traces[GAUCHE].title))
 
-        plt.step(ABSCISSES, traces[GAUCHE].datas, label=GAUCHE, color="tab:blue")
-        plt.step(ABSCISSES, traces[DROITE].datas, label=DROITE, color="tab:orange")
-        plt.xlabel("Abscisse (m)")
-        plt.ylabel(onde)
-        plt.grid(True, linestyle="--", alpha=0.5)
-        plt.legend()
-        plt.ylim(-10, 10)
-        index += 1
-        nb_mes_apl += 1
+            abscisses = [
+                i * traces[GAUCHE].step
+                for i in range(len(traces[GAUCHE].datas))
+            ]
 
-    plt.tight_layout() # Ajuste automatiquement les espacements
+            plt.step(abscisses, traces[GAUCHE].datas, label=GAUCHE, color="tab:blue")
+            plt.step(abscisses, traces[DROITE].datas, label=DROITE, color="tab:orange")
+            plt.xlabel("Abscisse (m)")
+            plt.ylabel(onde)
+            plt.grid(True, linestyle="--", alpha=0.5)
+            plt.legend()
+            plt.ylim(-10, 10)
+            index += 1
+            nb_mes_apl += 1
 
-plt.show()
+        plt.tight_layout() # Ajuste automatiquement les espacements
+
+    plt.show()
+
+main()

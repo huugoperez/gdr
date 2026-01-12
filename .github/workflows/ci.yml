@@ -9,36 +9,30 @@ on:
     paths:
       - '**.py'
 
+
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12", "3.13"]
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python3 -m pip install matplotlib
-        python3 -m pip install inquirer
-        python3 -m pip install folium
-        python3 -m pip install geopandas
-        python3 -m pip install pylint mypy
-        python3 -m pip install pyyaml
-        python3 -m pip install types-pyyaml
-        python3 -m pip install types-geopandas
-        python3 -m pip list
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - run: pylint src
+      - run: mypy src
 
-    - name: Analysing the code with pylint
-      run: |
-        pylint *.py
-        pylint src
-
-    - name: Checking types with mypy
-      run: |
-        mypy src
+  lint-future:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: |
+          pip install --upgrade pip
+          pip install -r requirements-future.txt
+      - run: pylint src

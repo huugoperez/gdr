@@ -19,7 +19,7 @@ from helpers.grip import get_grip_datas
 from helpers.generic_absdatatop_csv import get_generic_absdatatop_csv
 from helpers.road_mesure import RoadMeasure
 from helpers.tools_file import CheckConf
-from helpers.graph_tools import draw_objects, init_single_column_plt
+from helpers.graph_tools import draw_objects, init_single_column_plt, habille
 from helpers.iq3d import GraphStates
 from helpers.consts_etat_surface import surface_state_legend
 
@@ -260,9 +260,8 @@ def main(args):
     for j, mes in enumerate(measures):
         y_max = 100 if mes.unit in  ("CFT","CFL") else 1
         print(f"mesure {j}")
-        ax = axes[plt_index]
-        if mes.title is not None:
-            ax.set_title(mes.title)
+        ax: Axes = axes[plt_index]
+        habille(ax, y_max, title=mes.title, grid=True)
 
         print(f"tops avant offset {mes.tops()}")
         if j != 0 and mes.sens != measures[0].sens:
@@ -298,9 +297,6 @@ def main(args):
                 loc="upper right"
             )
 
-        ax.set_ylim((0, y_max))
-        ax.grid(visible=True, axis="x", linestyle="--")
-        ax.grid(visible=True, axis="y")
         draw_objects(mes.tops(), y_max, ax=ax)
         ax.bar(
             abscisses_data[0],
@@ -313,7 +309,7 @@ def main(args):
 
         if MEAN_STEP :
             ax = axes[plt_index]
-            ax.set_ylim((0, y_max))
+            habille(ax, y_max)
             draw_mean_histo(mes, y_max, args.rec_zh, ax=ax)
             draw_objects(mes.tops(), y_max, ax=ax)
             plt_index += 1

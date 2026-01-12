@@ -1,0 +1,7 @@
+-r requirements.txt
+
+pylint==3.1.*
+mypy
+
+types-pyyaml
+types-geopandas

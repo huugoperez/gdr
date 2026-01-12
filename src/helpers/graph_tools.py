@@ -17,6 +17,25 @@ def init_single_column_plt(nb_graphes) :
     return fig, axes
 
 
+def habille(
+    ax: Axes,
+    scale: int,
+    title: str | None = None,
+    label: str | None = None,
+    grid: bool = False
+):
+    """Habillage d'un axe"""
+    ax.tick_params(labelsize=6)
+    ax.set_ylim(0, scale)
+    if title:
+        ax.set_title(title)
+    if label:
+        ax.set_ylabel(label, fontsize=8)
+    if grid:
+        ax.grid(visible=True, axis="x", linestyle="--")
+        ax.grid(visible=True, axis="y")
+
+
 def draw_object(
     label: str,
     x_pos: float,
